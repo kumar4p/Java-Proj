@@ -1,1 +1,8 @@
 
+server:
+  port: 9797  servlet:    context-path: /PhoneBook
+spring:  mvc:    view:      prefix: /pages/
+      suffix: .jsp
+  datasource:    url: jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    driver-class-name: org.h2.Driver    

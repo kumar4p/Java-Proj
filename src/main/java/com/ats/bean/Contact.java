@@ -43,6 +43,7 @@ public class Contact {
 	 *@apiNote This variable holds the Phone Number of the contact of form page<br>
 	 *created Dec 22nd 2019
 	*/
-	private long phNo;
+	private Long phNo;
 
-}
+	private String activeSw;
+}//class

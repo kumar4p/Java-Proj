@@ -1,6 +1,11 @@
 package com.ats.repository;
 
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.ats.entity.ContactDetailsEntity;
 
@@ -14,6 +19,10 @@ import com.ats.entity.ContactDetailsEntity;
  *@return boolean <br>
  *created Dec 22nd 2019
 */
+@Repository
 public interface ContactDetailsRepository extends JpaRepository<ContactDetailsEntity, Integer>{
-
+	@Transactional
+	@Modifying
+	@Query("update ContactDetailsEntity set activeSw='N' where contactId=:cid")
+	public void softDelContactById(int cid);
 }

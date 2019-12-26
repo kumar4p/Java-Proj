@@ -64,5 +64,8 @@ public class ContactDetailsEntity {
 	*/
 	@Column(name = "contact_number", length = 14)
 	private long phNo;
+	
+	@Column(name="active_Sw",length = 1)
+	private String activeSw;
 
 }//class

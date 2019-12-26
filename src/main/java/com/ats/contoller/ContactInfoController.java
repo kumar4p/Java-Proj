@@ -1,10 +1,16 @@
 package com.ats.contoller;
 
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ats.bean.Contact;
 import com.ats.service.ContactService;
@@ -16,6 +22,9 @@ import com.ats.service.ContactService;
 */
 @Controller
 public class ContactInfoController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ContactInfoController.class);
+	
 	/**
 	 * variable name : service<br>
 	 *@author KUMAR <br>
@@ -23,7 +32,9 @@ public class ContactInfoController {
 	 *created Dec 22nd 2019
 	*/
 	@Autowired
-	private ContactService service;
+	private ContactService cntctService;
+	
+	
 	/**
 	 * method name : displayContactForm<br>
 	 *@author KUMAR <br>
@@ -32,14 +43,17 @@ public class ContactInfoController {
 	 *@return String <br>
 	 *created Dec 22nd 2019
 	*/
-	@RequestMapping(value = "/")
+	@RequestMapping(value = {"/","contactForm"}, method=RequestMethod.GET)
 	public String displayContactForm(Model model) {
+		logger.info("from displayContactForm()");
 		Contact contact = new Contact();
 		//sending data from controller to UI
 		model.addAttribute("contact", contact);
 		//returning logical view name
 		return "contactForm";
 	}//displayContactForm(-)
+	
+	
 	
 	/**
 	 * method name : handleSubmitBtn<br>
@@ -52,9 +66,32 @@ public class ContactInfoController {
 	 *created Dec 22nd 2019
 	*/
 	@RequestMapping(value="/saveContact", method = RequestMethod.POST)
-	public String handleSubmitBtn(Model model, Contact contact) {
-		return null;
+	public String handleSubmitBtn(@ModelAttribute(value = "contact") Contact contact,RedirectAttributes redirectAttr) {
+		
+		logger.info("contact form submitted "+ contact);
+		boolean flag = cntctService.saveContact(contact);
+		
+		if(flag)
+			redirectAttr.addFlashAttribute("succMsg","Contact Saved");
+		else
+			redirectAttr.addFlashAttribute("errMsg","contact Not Saved");
+		return "redirect:/contactCreationSuccess";
 	}//handleSubmitBtn(-,-)
+	
+	/**
+	 * method name : contactCreationSuccess<br>
+	 *@author KUMAR <br>
+	 *@apiNote This method is to handle double posting problem developed on basis of PRG design pattern
+	 *@return String <br>
+	 *created Dec 22nd 2019
+	*/
+	@RequestMapping(value ="/contactCreationSuccess", method = RequestMethod.GET)
+	public String contactCreationSuccess(Model model) {
+		logger.info("contactCreationSuccess() form re-submitted");
+		model.addAttribute("contact", new Contact());
+		return "contactForm";
+	}//contactCreationSuccess()
+	
 	/**
 	 * method name : viewContacts<br>
 	 *@author KUMAR <br>
@@ -63,8 +100,13 @@ public class ContactInfoController {
 	 *@return String <br>
 	 *created Dec 22nd 2019
 	*/
-	@RequestMapping(value="/seeContacts", method = RequestMethod.GET)
+
+	@RequestMapping(value="/viewContacts", method = RequestMethod.GET)
 	public String viewContacts(Model model) {
-		return null;
+		logger.info("viewContacts() executed"); 
+		List<Contact> contactList = cntctService.getAllContact();
+		if(contactList!=null)
+			model.addAttribute("contactList", contactList);
+		return "viewContacts";
 	}//viewContact(-)
 }//class
