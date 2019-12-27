@@ -13,7 +13,7 @@
 <title>Insert title here</title>
 <script type="text/javascript">
 	function deleteConfirm(){
-		return confirm("are sure you want to delete?");
+		return confirm("Are sure you want to delete?");
 	}
 </script>
 

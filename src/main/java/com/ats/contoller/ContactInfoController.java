@@ -67,8 +67,8 @@ public class ContactInfoController {
 	*/
 	@RequestMapping(value="/saveContact", method = RequestMethod.POST)
 	public String handleSubmitBtn(@ModelAttribute(value = "contact") Contact contact,RedirectAttributes redirectAttr) {
-		
-		logger.info("contact form submitted "+ contact);
+		String logInfo ="contact form submitted "+ contact;
+		logger.info(logInfo);
 		boolean flag = cntctService.saveContact(contact);
 		
 		if(flag)

@@ -35,7 +35,7 @@
 				<td>Contact Number::</td>
 				<td><form:input path="phNo"/>
 			</tr>
-			<tr><td><input type ="reset" value="Reset Values"/></td><td><input type="submit" value="submit"></td></tr>
+			<tr><td><input type ="reset" value="Clear Contact Details"/></td><td><input type="submit" value="Save Contact"></td></tr>
 		</table>
 	</form:form>
 	<h3 style="color:yellow"><a href="viewContacts">Show All Contacts</a></h3>

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,8 @@ import org.springframework.stereotype.Service;
 import com.ats.bean.Contact;
 import com.ats.entity.ContactDetailsEntity;
 import com.ats.repository.ContactDetailsRepository;
+
+import ch.qos.logback.classic.Level;
 
 /**
  * class name : ContactServiceImpl<br>
@@ -24,28 +28,31 @@ import com.ats.repository.ContactDetailsRepository;
 @Service
 public class ContactServiceImpl implements ContactService {
 	
+	private static final Logger logger = LoggerFactory.getLogger(ContactServiceImpl.class); 
 	@Autowired
 	private ContactDetailsRepository cntctDetailsRep;
 	
 
 	@Override
 	public boolean saveContact(Contact c) {
+		boolean flag;
 		ContactDetailsEntity entity = new ContactDetailsEntity();
 		BeanUtils.copyProperties(c, entity);
 		entity.setActiveSw("Y");
 		entity = cntctDetailsRep.save(entity);
 		if(entity.getContactId()>=0)
-			return true;
+			flag = true;
 		else
-			return false;
+			flag = false;
+		return flag;
 	}//saveContact(-)
 
 	@Override
 	public List<Contact> getAllContact() {
-		List<Contact> contactList = new ArrayList();
+		List<Contact> contactList = new ArrayList<>();
 		List<ContactDetailsEntity> entityList = cntctDetailsRep.findAll();
 		if(!entityList.isEmpty()) {
-			entityList = entityList.stream().filter(entity-> entity.getActiveSw().equals("Y")).collect(Collectors.toList());
+			entityList = entityList.stream().filter(entity-> "Y".equalsIgnoreCase(entity.getActiveSw())).collect(Collectors.toList());
 					
 			entityList.forEach(entity->{
 			Contact c = new Contact();
@@ -75,13 +82,13 @@ public class ContactServiceImpl implements ContactService {
 
 	@Override
 	public boolean deleteContact(int cid) {
-		boolean flag = false;
+		boolean flag;
 		try{
 			cntctDetailsRep.softDelContactById(cid);
 			flag = true;
 		}catch (IllegalArgumentException e) {
-			e.printStackTrace();
 			flag = false;
+			logger.debug(e.getMessage(), Level.DEBUG,e);
 		}
 		return flag;
 	}//deleteContact(-)
