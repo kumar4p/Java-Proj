@@ -14,9 +14,7 @@ import com.ats.entity.ContactDetailsEntity;
  *@author KUMAR <br>
  *@apiNote This ContactDetailsRepository(I) extends from JpaRepository(I)<br>
  *so we no need to write any code for basic CRUD operations spring data only supplies
- *those logics, if we customized queries then we have to write our own methods 
- *@param c <br>
- *@return boolean <br>
+ *those logics, if we customized queries then we have to write our own methods
  *created Dec 22nd 2019
 */
 @Repository
